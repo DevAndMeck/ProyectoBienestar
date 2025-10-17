@@ -1,0 +1,61 @@
+<!-- Dashboard moderno con stats cards -->
+<div class="dashboard">
+  <nav class="navbar">
+    <div class="container">
+      <div class="navbar-brand">
+        <h1>Sistema de Roles y Permisos</h1>
+      </div>
+      <div class="navbar-menu">
+        <a routerLink="/dashboard" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Dashboard</a>
+        <a routerLink="/registros" routerLinkActive="active">Registros</a>
+        <a *ngIf="authService.esAdministrador()" routerLink="/usuarios" routerLinkActive="active">Usuarios</a>
+        <button class="btn btn-secondary" (click)="logout()">Cerrar Sesión</button>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container">
+    <!-- Stats Cards -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <h3>Bienvenido</h3>
+        <div class="stat-value">{{ usuario?.nombre_completo }}</div>
+        <div class="stat-label">{{ usuario?.rol_nombre }}</div>
+      </div>
+      
+      <div class="stat-card green">
+        <h3>Permisos Activos</h3>
+        <div class="stat-value">{{ usuario?.permisos?.length || 0 }}</div>
+        <div class="stat-label">Permisos asignados</div>
+      </div>
+    </div>
+
+    <!-- User Info Card -->
+    <div class="card">
+      <h2 style="margin-bottom: 1.5rem; font-size: 1.25rem; font-weight: 700;">Información de Usuario</h2>
+      
+      <div class="user-info">
+        <p><strong>Usuario:</strong> {{ usuario?.username }}</p>
+        <p><strong>Email:</strong> {{ usuario?.email }}</p>
+        <p><strong>Rol:</strong> <span class="badge" [ngClass]="authService.esAdministrador() ? 'badge-admin' : 'badge-user'">{{ usuario?.rol_nombre }}</span></p>
+        <p><strong>Permisos:</strong></p>
+        <ul>
+          <li *ngFor="let permiso of usuario?.permisos">{{ permiso }}</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Actions Card -->
+    <div class="card">
+      <h2 style="margin-bottom: 1.5rem; font-size: 1.25rem; font-weight: 700;">Acciones Rápidas</h2>
+      <div class="action-buttons">
+        <button class="btn btn-primary" routerLink="/registros">
+          Ver Registros
+        </button>
+        <button *ngIf="authService.esAdministrador()" class="btn btn-success" routerLink="/usuarios">
+          Gestionar Usuarios
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

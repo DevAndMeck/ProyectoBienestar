@@ -1,0 +1,71 @@
+<!-- Vista de usuarios moderna solo para administradores -->
+<div class="dashboard">
+  <nav class="navbar">
+    <div class="container">
+      <div class="navbar-brand">
+        <h1>Sistema de Roles y Permisos</h1>
+      </div>
+      <div class="navbar-menu">
+        <a routerLink="/dashboard" routerLinkActive="active">Dashboard</a>
+        <a routerLink="/registros" routerLinkActive="active">Registros</a>
+        <a routerLink="/usuarios" routerLinkActive="active">Usuarios</a>
+        <button class="btn btn-secondary" (click)="authService.logout()">Cerrar Sesión</button>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container">
+    <div class="card">
+      <div class="header-section">
+        <h2>Gestión de Usuarios</h2>
+      </div>
+
+      <div *ngIf="mensaje" [class]="'alert alert-' + tipoMensaje">
+        {{ mensaje }}
+      </div>
+
+      <div class="alert alert-info">
+        <strong>Panel de Administrador:</strong> Solo los administradores pueden acceder a esta sección.
+      </div>
+
+      <div class="table-container" *ngIf="usuarios.length > 0">
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Usuario</th>
+              <th>Nombre Completo</th>
+              <th>Email</th>
+              <th>Rol</th>
+              <th>Estado</th>
+              <th>Fecha Registro</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let usuario of usuarios">
+              <td>{{ usuario.id }}</td>
+              <td><strong>{{ usuario.username }}</strong></td>
+              <td>{{ usuario.nombre_completo }}</td>
+              <td>{{ usuario.email }}</td>
+              <td>
+                <span [class]="'badge badge-' + (usuario.rol_nombre === 'Administrador' ? 'admin' : 'user')">
+                  {{ usuario.rol_nombre }}
+                </span>
+              </td>
+              <td>
+                <span [class]="'badge badge-' + (usuario.activo ? 'active' : 'inactive')">
+                  {{ usuario.activo ? 'Activo' : 'Inactivo' }}
+                </span>
+              </td>
+              <td>{{ usuario.created_at | date: 'dd/MM/yyyy HH:mm' }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div *ngIf="usuarios.length === 0" class="alert alert-info">
+        No hay usuarios registrados en el sistema.
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,119 @@
+<!-- Vista de registros moderna con tabla responsiva -->
+<div class="dashboard">
+  <nav class="navbar">
+    <div class="container">
+      <div class="navbar-brand">
+        <h1>Sistema de Roles y Permisos</h1>
+      </div>
+      <div class="navbar-menu">
+        <a routerLink="/dashboard" routerLinkActive="active">Dashboard</a>
+        <a routerLink="/registros" routerLinkActive="active">Registros</a>
+        <a *ngIf="authService.esAdministrador()" routerLink="/usuarios" routerLinkActive="active">Usuarios</a>
+        <button class="btn btn-secondary" (click)="authService.logout()">Cerrar Sesión</button>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container">
+    <div class="card">
+      <div class="header-section">
+        <h2>Gestión de Registros</h2>
+        <!-- Removed duplicate *ngIf directive -->
+        <button *appHasPermission="'crear'" class="btn btn-success" (click)="abrirFormularioCrear()">
+          + Nuevo Registro
+        </button>
+      </div>
+
+      <div *ngIf="mensaje" [class]="'alert alert-' + tipoMensaje">
+        {{ mensaje }}
+      </div>
+
+      <!-- Formulario de Crear/Editar -->
+      <div *ngIf="mostrarFormulario" class="form-section">
+        <h3>{{ modoEdicion ? 'Editar Registro' : 'Nuevo Registro' }}</h3>
+        <form (ngSubmit)="guardar()">
+          <div class="form-group">
+            <label for="titulo">Título</label>
+            <input
+              type="text"
+              id="titulo"
+              class="form-control"
+              [(ngModel)]="registroActual.titulo"
+              name="titulo"
+              placeholder="Ingrese el título"
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="descripcion">Descripción</label>
+            <textarea
+              id="descripcion"
+              class="form-control"
+              [(ngModel)]="registroActual.descripcion"
+              name="descripcion"
+              rows="4"
+              placeholder="Ingrese la descripción"
+            ></textarea>
+          </div>
+
+          <div class="form-actions">
+            <button type="submit" class="btn btn-primary">
+              {{ modoEdicion ? 'Actualizar' : 'Crear' }}
+            </button>
+            <button type="button" class="btn btn-secondary" (click)="cancelar()">
+              Cancelar
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <!-- Tabla de Registros -->
+      <div class="table-container" *ngIf="registros.length > 0 && !mostrarFormulario">
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Título</th>
+              <th>Descripción</th>
+              <th>Creador</th>
+              <th>Fecha Creación</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let registro of registros">
+              <td>{{ registro.id }}</td>
+              <td><strong>{{ registro.titulo }}</strong></td>
+              <td>{{ registro.descripcion }}</td>
+              <td>{{ registro.creador }}</td>
+              <td>{{ registro.created_at | date: 'dd/MM/yyyy HH:mm' }}</td>
+              <td>
+                <div class="action-buttons">
+                  <button
+                    *appHasPermission="'actualizar'"
+                    class="btn btn-primary btn-sm"
+                    (click)="abrirFormularioEditar(registro)"
+                  >
+                    Editar
+                  </button>
+                  <button
+                    *appHasPermission="'eliminar'"
+                    class="btn btn-danger btn-sm"
+                    (click)="eliminar(registro.id!)"
+                  >
+                    Eliminar
+                  </button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div *ngIf="registros.length === 0 && !mostrarFormulario" class="alert alert-info">
+        No hay registros disponibles. 
+        <span *appHasPermission="'crear'">Haga clic en "Nuevo Registro" para crear uno.</span>
+      </div>
+    </div>
+  </div>
+</div>

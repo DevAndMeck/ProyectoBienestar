@@ -1,0 +1,29 @@
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  /* Changed gradient from purple to blue-green */
+  background: linear-gradient(135deg, #3b82f6 0%, #10b981 100%);
+}
+
+.login-card {
+  width: 100%;
+  max-width: 400px;
+  padding: 40px;
+}
+
+.login-card h1 {
+  font-size: 24px;
+  margin-bottom: 10px;
+  color: #333;
+}
+
+.login-card h2 {
+  font-size: 20px;
+  color: #666;
+}
+
+.btn-block {
+  width: 100%;
+}
